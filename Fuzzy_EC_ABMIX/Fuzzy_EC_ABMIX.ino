@@ -14,7 +14,8 @@ unsigned long epochTime;
 #define pumpB 5
 #define pumpW 6
 //-------------------nilai set point tds --------------------
-#define sP1 560
+#define sP1a 560
+#define sP1b 600
 #define sP2 750
 #define sP3 900
 //--------------------batas batas Error dan deError----------
@@ -30,7 +31,7 @@ GravityTDS gravityTds;
 //----------------------------------------------------------
 float Error, deError;
 boolean bWater, bABMIX;
-unsigned long waktuONWater, waktuONABMIX, waterBegin, ABMIXBegin,prevR;
+unsigned long waktuONWater, waktuONABMIX, waterBegin, ABMIXBegin, prevR;
 void setup()
 {
   Serial.begin(115200);
@@ -48,13 +49,13 @@ void setup()
 
 void loop()
 {
-//  if (millis() - prevR > 500)
-//  {
-//    float tds = readTDS();
-//    Serial.print("TDS = ");
-//    Serial.println(tds);
-//    prevR = millis();
-//  }
+  //  if (millis() - prevR > 500)
+  //  {
+  //    float tds = readTDS();
+  //    Serial.print("TDS = ");
+  //    Serial.println(tds);
+  //    prevR = millis();
+  //  }
   if ( Serial.available() > 0)
   {
     String in = Serial.readStringUntil('\r');
@@ -63,19 +64,39 @@ void loop()
     float Er[3];
     float dEr[3];
     float rules[3][3];
-    deError = Error;
-    Error = sP1 - tds;
+    float Error_1 = Error;
+    int sP;
+    if ( tds <= sP1a )
+    {
+      sP = sP1a;
+      Error = sP - tds;
+      deError = Error - Error_1;
+    }
+    else if ( tds >= sP1b)
+    {
+      sP = sP1b;
+      Error = sP - tds;
+      deError = Error - Error_1;
+    }
+    else
+    {
+      Error = 0;
+      deError = 0;
+    }
+
     EFuzzy(Error, Er);
+
     DeFuzzy(deError, dEr);
     Serial.print("tds     = "); Serial.println(tds);
     Serial.print("Error   = "); Serial.println(Error);
     Serial.print("deError = "); Serial.println(deError);
-    outData(Er);
-    outData(dEr);
+//    outData(Er);
+//    outData(dEr);
     Rules(Er, dEr, rules);
     float defuz = Deffuzyfication(rules);
-    kondisi(defuz);
-
+//    kondisi(defuz);
+    
+    Serial.println("=======================================================================================");
   }
   offPump();
 }

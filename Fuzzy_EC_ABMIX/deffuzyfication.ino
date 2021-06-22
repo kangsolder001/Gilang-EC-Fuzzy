@@ -1,14 +1,46 @@
+float outRule(float rulein, int numRule)
+{
+  float valOut;
+  if ( numRule == 1)
+  {
+    valOut = 100 - (100 * rulein);
+  }
+  else if ( numRule == 2)
+  {
+    valOut = 67 + (33 * rulein);
+  }
+  else if ( numRule == 3)
+  {
+    valOut = 133 - (33 * rulein);
+  }
+  else if ( numRule == 4)
+  {
+    valOut = 100 + (100 * rulein);
+  }
+  Serial.print("valout = ");
+  Serial.println(valOut);
+  return valOut;
+  
+}
 float Deffuzyfication(const float rule[3][3]) // waktu , caHardaya,SoftuHardu
 {
   float sigmamiuxBobot;
 
-  float K = -100;    // pemberian AIR
-  float P = 0;  // donothing
-  float L = 100;    // pemberian ABMIX 
-  sigmamiuxBobot = (rule[0][0] * K + rule[0][1] * K + rule[0][2] * K +
-                    rule[1][0] * K + rule[1][1] * P + rule[1][2] * L +
-                    rule[2][0] * L + rule[2][1] * L + rule[2][2] * L );
-                    
+  int N = 1;
+  int Z1 = 2;
+  int Z2 = 3;
+  int P = 4;
+  sigmamiuxBobot = (outRule(rule[0][0], N) * rule[0][0] + // rule1
+                    outRule(rule[0][1], N) * rule[0][1] + // rule2
+                    outRule(rule[0][2], N) * rule[0][2] + // rule3
+                    outRule(rule[1][0], N) * rule[1][0] + // rule4
+                    outRule(rule[1][1], Z1) * rule[1][1] + // rule5
+                    outRule(rule[1][1], Z2) * rule[1][1] +
+                    outRule(rule[1][2], P) * rule[1][2] + // rule6
+                    outRule(rule[2][0], P) * rule[2][0] + // rule7
+                    outRule(rule[2][1], P) * rule[2][1] + // rule8
+                    outRule(rule[2][2], P) * rule[2][2]); // rule9
+
   Serial.print("sigmamiuxBobot = ");
   Serial.println(sigmamiuxBobot);
   float sigmamiu = 0;
@@ -19,6 +51,7 @@ float Deffuzyfication(const float rule[3][3]) // waktu , caHardaya,SoftuHardu
       sigmamiu += rule[i][j];
     }
   }
+  sigmamiu = sigmamiu + rule[1][1];
   Serial.print("sigmamiu = ");
   Serial.println(sigmamiu);
   float Defuzification;

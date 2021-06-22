@@ -3,7 +3,7 @@ void kondisi(float def)
   long porsi = abs(def / 100 * 130);
   Serial.print("Porsi = ");
   Serial.print(porsi);
-  Serial.println("%");
+  Serial.println("ppm");
   waktuONWater = 0;
   waktuONABMIX = 0;
   bWater = false;
@@ -18,11 +18,6 @@ void kondisi(float def)
     Serial.println("Pemberian AIR");
     Serial.print("waktu = "); Serial.println(waktuONWater);
     pumpWater();
-    //    char buff[1000];
-    //    sprintf(buff,"memberikan Air dengan porsi %f, dan waktu %f", porsi, waktuON);
-    //    Serial.println(buff);
-    //    Serial.print("Memberikan Air dengan Porsi = ");
-    //    Serial.println(porsi);
 
     // mengurangi ppm sejumlah = def * 130
     // 33 ml / 1 ppm
