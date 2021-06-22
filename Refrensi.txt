@@ -1,0 +1,33 @@
+https://www.anakkendali.com/tutorial-fuzzy-logic-controller-dengan-arduino-defuzzifikasi/
+Percobaan mendapatkan Nilai kenaikan dan respon ABMIX
+1. siapkan air dalam tandon yang digunakan ( 15 L ) 
+2. taruh sensor dan ukur nilai nutrisi dalam air sebelum air ditambahakan AB MIX  ( catat nilai sensor TDS, dan TDS arduino ) 
+3. siapkan 10 mL ABMIX ( yang sudah di campur A dan B )  5mL A dan 5mL B
+4. tuangkan 10 mL ABMIX yang sudah di campur kedalam tandon 15 L air
+5. aduk dan catat nilai, serta waktu yang dibutuhkan untuk sensor mencapai nilai yang stabil 
+6. lakukan percobaan selama 10 x untuk mendapatkan banyak sample sehingga hasilnya lebih akurat
+7. lakukan juga untuk AIR  
+
+
+
+1. FUZZYFICATION ( OK ) 
+2. RULES ( OK ) SESUAI DENGAN GRAFIK DI EXCEL 
+3. DEFUZZYFICATION 
+	- DEF = SIGMA MIU X BOBOT / SIGMA MIU
+4. HASIL DARI DEFUZZYFIKASI MEREPRESENTASIKAN -100 SAMPAI 100 ( PERSENAN PORSI YANG AKAN DI BERIKAN ) 
+	- -100 ARTINYA PEMBERIAN ABMIX DENGAN PORSI 100%
+	- + 100 ARTINYA PEMBERIAN AIR DENGAN PORSI 100%
+	- PERSENAN YANG DIMAKSUD ADALAH JARAK ANTARA NILAI NEGATIF KE ZERO ATAU POSITIF KE ZERO ( CONTOH PADA GAMBAR 130 PPM ) 
+	- DARI PERSENAN OUTPUT AKAN DI KONVERSI KE DELAY POMPA UNTUK MENDAPATKAN PORSI PENAMBAHAN ATAU PENGURANGAN PPM SESUAI DENGAN JARAK YANG DITENTUKAN 
+
+
+kesimpulan			
+1. pompa peristaltik 5ml /3 second			
+2. pompa air  500 ml / 9 second			
+3. pembahan ABMIX per 10 ml menambahkan rata rata 52 ppm			
+4. rata rata repon pemberian ABMIX adalah 78 detik / 10 mL			120detik 
+4. penambahan Air …. Menurunkan rata rata … ppm 			
+
+
+1. mencari konversi timestamp
+2. 
