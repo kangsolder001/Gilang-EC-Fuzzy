@@ -29,5 +29,9 @@ kesimpulan
 4. penambahan Air …. Menurunkan rata rata … ppm 			
 
 
-1. mencari konversi timestamp
-2. 
+1. Konversi Porsi ke pompa
+2. Waktu Set ( hari keberapa / mulai tanggal berapa ) 
+3. get Time untuk pembanding waktu 
+4. data output untuk grafik 
+5. layout dan data Blink 
+6. dll 
