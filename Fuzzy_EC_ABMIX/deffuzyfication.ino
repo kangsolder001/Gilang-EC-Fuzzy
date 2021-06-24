@@ -1,26 +1,26 @@
 float outRule(float rulein, int numRule)
 {
   float valOut;
-  if ( numRule == 1)
+  if ( numRule == 1) //rule nilai negatif
   {
     valOut = 100 - (100 * rulein);
   }
-  else if ( numRule == 2)
+  else if ( numRule == 2) // rule nilai zero
   {
     valOut = 67 + (33 * rulein);
   }
-  else if ( numRule == 3)
+  else if ( numRule == 3) // rule nilai zero
   {
     valOut = 133 - (33 * rulein);
   }
-  else if ( numRule == 4)
+  else if ( numRule == 4) // rule nilai positif
   {
     valOut = 100 + (100 * rulein);
   }
   Serial.print("valout = ");
   Serial.println(valOut);
   return valOut;
-  
+
 }
 float Deffuzyfication(const float rule[3][3]) // waktu , caHardaya,SoftuHardu
 {
@@ -35,11 +35,11 @@ float Deffuzyfication(const float rule[3][3]) // waktu , caHardaya,SoftuHardu
                     outRule(rule[0][2], N) * rule[0][2] + // rule3
                     outRule(rule[1][0], N) * rule[1][0] + // rule4
                     outRule(rule[1][1], Z1) * rule[1][1] + // rule5
-                    outRule(rule[1][1], Z2) * rule[1][1] +
-                    outRule(rule[1][2], P) * rule[1][2] + // rule6
-                    outRule(rule[2][0], P) * rule[2][0] + // rule7
-                    outRule(rule[2][1], P) * rule[2][1] + // rule8
-                    outRule(rule[2][2], P) * rule[2][2]); // rule9
+                    outRule(rule[1][1], Z2) * rule[1][1] + // rule6
+                    outRule(rule[1][2], P) * rule[1][2] + // rule7
+                    outRule(rule[2][0], P) * rule[2][0] + // rule8
+                    outRule(rule[2][1], P) * rule[2][1] + // rule9
+                    outRule(rule[2][2], P) * rule[2][2]); // rule10
 
   Serial.print("sigmamiuxBobot = ");
   Serial.println(sigmamiuxBobot);
@@ -58,5 +58,25 @@ float Deffuzyfication(const float rule[3][3]) // waktu , caHardaya,SoftuHardu
   Defuzification = sigmamiuxBobot / sigmamiu;
   Serial.print("Defuz = ");
   Serial.println(Defuzification);
+  Serial.print("def = ");
+  int def = ceil(Defuzification);
+  Serial.println(def);
+  Serial.print("Porsi = ");
+
+  int porsi;
+
+  if ( def > 100)
+  {
+    porsi = def - 100;
+  }
+  else if ( def < 100)
+  {
+    porsi = 100 - def;
+  }
+  else
+  {
+    porsi = 0;
+  }
+  Serial.println(porsi);
   return Defuzification;
 }

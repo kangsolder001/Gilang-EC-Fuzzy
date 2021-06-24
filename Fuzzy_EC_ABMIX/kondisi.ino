@@ -1,20 +1,16 @@
 void kondisi(float def)
 {
-  long porsi = abs(def / 100 * 130);
-  Serial.print("Porsi = ");
-  Serial.print(porsi);
-  Serial.println("ppm");
   waktuONWater = 0;
   waktuONABMIX = 0;
   bWater = false;
   bABMIX = false;
-  if ( def == 0)
+  if ( def == 100)
   {
     //donothing , karena nilainya sudah pas
   }
   else if ( def < 0)
   {
-    waktuONWater = porsi * 594; //  + tarikan awal;
+    waktuONWater =  594; //  + tarikan awal;
     Serial.println("Pemberian AIR");
     Serial.print("waktu = "); Serial.println(waktuONWater);
     pumpWater();
@@ -28,7 +24,7 @@ void kondisi(float def)
   }
   else if ( def > 0)
   {
-    waktuONABMIX = porsi * 143;
+    waktuONABMIX =  143;
     Serial.println("Pemberian ABMIX");
     Serial.print("waktu = "); Serial.println(waktuONABMIX);
     pumpAB();
@@ -80,6 +76,6 @@ void offPump()
     digitalWrite(pumpB, 0);
     Serial.println("pompa ABMIX Off");
     Serial.println("=======================================================================================");
-    bABMIX= false;
+    bABMIX = false;
   }
 }

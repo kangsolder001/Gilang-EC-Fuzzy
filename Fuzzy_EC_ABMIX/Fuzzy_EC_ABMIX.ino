@@ -13,6 +13,7 @@ unsigned long epochTime;
 #define pumpA 4
 #define pumpB 5
 #define pumpW 6
+#define pumpOW 7
 //-------------------nilai set point tds --------------------
 #define sP1a 560
 #define sP1b 600
@@ -69,8 +70,8 @@ void loop()
     if ( tds <= sP1a )
     {
       sP = sP1a;
-      Error = sP - tds;
-      deError = Error - Error_1;
+      Error = sP - tds; // Error = setpoint - nilai sensor (nilai sekarang ) 
+      deError = Error - Error_1; // deError = nilai error sekarang - nilai error sebelumnya
     }
     else if ( tds >= sP1b)
     {
@@ -85,7 +86,6 @@ void loop()
     }
 
     EFuzzy(Error, Er);
-
     DeFuzzy(deError, dEr);
     Serial.print("tds     = "); Serial.println(tds);
     Serial.print("Error   = "); Serial.println(Error);
