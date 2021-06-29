@@ -13,7 +13,7 @@ unsigned long epochTime;
 #define pumpA 4
 #define pumpB 5
 #define pumpW 6
-#define pumpOW 7
+#define pumpWO 7
 //-------------------nilai set point tds --------------------
 #define sP1a 560
 #define sP1b 600
@@ -27,11 +27,11 @@ unsigned long epochTime;
 #define De2  0
 #define De3  130
 //-------------------------Sesor TDS-------------------------
-#define sensPin A0
+#define sensPin A1
 GravityTDS gravityTds;
 //----------------------------------------------------------
 float Error, deError;
-boolean bWater, bABMIX;
+boolean bWater, bWaterOut, bABMIX;
 unsigned long waktuONWater, waktuONABMIX, waterBegin, ABMIXBegin, prevR;
 void setup()
 {
@@ -40,6 +40,7 @@ void setup()
   pinMode(pumpA, OUTPUT);
   pinMode(pumpB, OUTPUT);
   pinMode(pumpW, OUTPUT);
+  pinMode(pumpWO, OUTPUT);
   Serial.println("Inisialisasi....!!!");
   gravityTds.setPin(sensPin);
   gravityTds.setAref(5.0);  //reference voltage on ADC, default 5.0V on Arduino UNO
@@ -50,13 +51,13 @@ void setup()
 
 void loop()
 {
-  //  if (millis() - prevR > 500)
-  //  {
-  //    float tds = readTDS();
-  //    Serial.print("TDS = ");
-  //    Serial.println(tds);
-  //    prevR = millis();
-  //  }
+  if (millis() - prevR > 500)
+  {
+    float tds = readTDS();
+    Serial.print("TDS = ");
+    Serial.println(tds);
+    prevR = millis();
+  }
   if ( Serial.available() > 0)
   {
     String in = Serial.readStringUntil('\r');
@@ -70,7 +71,7 @@ void loop()
     if ( tds <= sP1a )
     {
       sP = sP1a;
-      Error = sP - tds; // Error = setpoint - nilai sensor (nilai sekarang ) 
+      Error = sP - tds; // Error = setpoint - nilai sensor (nilai sekarang )
       deError = Error - Error_1; // deError = nilai error sekarang - nilai error sebelumnya
     }
     else if ( tds >= sP1b)
@@ -90,12 +91,12 @@ void loop()
     Serial.print("tds     = "); Serial.println(tds);
     Serial.print("Error   = "); Serial.println(Error);
     Serial.print("deError = "); Serial.println(deError);
-//    outData(Er);
-//    outData(dEr);
+    //    outData(Er);
+    //    outData(dEr);
     Rules(Er, dEr, rules);
     float defuz = Deffuzyfication(rules);
-//    kondisi(defuz);
-    
+    kondisi(defuz);
+
     Serial.println("=======================================================================================");
   }
   offPump();

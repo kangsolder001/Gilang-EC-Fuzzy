@@ -4,51 +4,66 @@ void kondisi(float def)
   waktuONABMIX = 0;
   bWater = false;
   bABMIX = false;
+  bWaterOut = false;
+  //  unsigned long waktu;
+
+  Serial.println(def);
+  Serial.print("Porsi = ");
+
+  int porsi;
+
+  Serial.println(porsi);
   if ( def == 100)
   {
+    porsi = 0;
     //donothing , karena nilainya sudah pas
   }
-  else if ( def < 0)
+  else if ( def < 100)
   {
-    waktuONWater =  594; //  + tarikan awal;
+    porsi = 100 - def;
+    Serial.print(porsi);
+    //    waktu = porsi * 360; //500 ml = 25 ppm , 100 ppm = 2000 , 9000 ms / 500 ml, 36000 ms / 2000ml
+    waktuONWater =  porsi * 360.0; //  + tarikan awal;
     Serial.println("Pemberian AIR");
+
     Serial.print("waktu = "); Serial.println(waktuONWater);
-    pumpWater();
+    pumpWaterOut();
 
-    // mengurangi ppm sejumlah = def * 130
-    // 33 ml / 1 ppm
-    // 594 ms / 33 ml
-    // 594 ms / 1 ppm
-
-    // menambahkan air ( program penambahan air )
   }
-  else if ( def > 0)
+  else if ( def > 100)
   {
-    waktuONABMIX =  143;
+    porsi = def - 100;
+    //    waktu = porsi * 106.8; // 5ml = 3000 ms, 10ml = 56ppm , 100 ppm = 17.8ml , 17.8 ml =10680 ms
+    waktuONABMIX =  porsi * 106.8;
+    Serial.print("mulai = ");
+    Serial.println(millis());
     Serial.println("Pemberian ABMIX");
     Serial.print("waktu = "); Serial.println(waktuONABMIX);
     pumpAB();
-
-    // 0.178 ml / 1 ppm
-    // 248 ms / 0.178 ml
-    // karena ada 2 carian jadi di bagi 2
-    // 143 ms / 1 ppm
-    // delay = porsi * 143
-    // menambahkan ppm sejumlah = def * 130
-    // menambahkan abmix ( program penambahan abmix )
-    //    pompaON = millis();
-    //    porsi = def * 130;
-    //    waktuON =
-
   }
+}
+
+
+void pumpWaterOut()
+{
+  digitalWrite(pumpWO, 1);
+  Serial.println("=======================================================================================");
+  Serial.println("Pompa Water OUT ON");
+  Serial.print("mulai = ");
+  Serial.println(millis());
+  waterBegin = millis();
+  bWaterOut = true;
 }
 
 void pumpWater()
 {
   digitalWrite(pumpW, 1);
   Serial.println("=======================================================================================");
-  Serial.println("Pompa AIR ON");
+  Serial.print("mulai = ");
+  Serial.println(millis());
+  Serial.println("Pompa Water IN ON");
   waterBegin = millis();
+
   bWater = true;
 }
 void pumpAB()
@@ -63,11 +78,23 @@ void pumpAB()
 
 void offPump()
 {
-  if (millis() - waterBegin >= waktuONWater && bWater )
+  if (millis() - waterBegin >= waktuONWater && bWaterOut )
+  {
+    digitalWrite(pumpWO, 0);
+    Serial.println("Pompa Water Out Off");
+    Serial.println("=======================================================================================");
+    Serial.print("Selesai = ");
+    Serial.println(millis());
+    bWaterOut = false;
+    pumpWater();
+  }
+  else if (millis() - waterBegin >= waktuONWater && bWater )
   {
     digitalWrite(pumpW, 0);
-    Serial.println("Pompa AIR Off");
+    Serial.println("Pompa Water IN Off");
     Serial.println("=======================================================================================");
+    Serial.print("Selesai = ");
+    Serial.println(millis());
     bWater = false;
   }
   if ( millis() - ABMIXBegin >= waktuONABMIX && bABMIX)
@@ -76,6 +103,8 @@ void offPump()
     digitalWrite(pumpB, 0);
     Serial.println("pompa ABMIX Off");
     Serial.println("=======================================================================================");
+    Serial.print("Selesai = ");
+    Serial.println(millis());
     bABMIX = false;
   }
 }

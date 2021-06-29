@@ -59,24 +59,6 @@ float Deffuzyfication(const float rule[3][3]) // waktu , caHardaya,SoftuHardu
   Serial.print("Defuz = ");
   Serial.println(Defuzification);
   Serial.print("def = ");
-  int def = ceil(Defuzification);
-  Serial.println(def);
-  Serial.print("Porsi = ");
-
-  int porsi;
-
-  if ( def > 100)
-  {
-    porsi = def - 100;
-  }
-  else if ( def < 100)
-  {
-    porsi = 100 - def;
-  }
-  else
-  {
-    porsi = 0;
-  }
-  Serial.println(porsi);
+  
   return Defuzification;
 }
