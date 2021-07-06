@@ -61,6 +61,7 @@ void loop()
     Serial.print("TDS = ");
     Serial.println(tds);
     prevR = millis();
+    SendData(tds);
   }
   if ( Serial.available() > 0)
   {
