@@ -1,14 +1,14 @@
 #include <EEPROM.h>
 #include "GravityTDS.h"
-#include <NTPClient.h>
-#include <WiFiUdp.h>
+//#include <NTPClient.h>
+//#include <WiFiUdp.h>
 #include<SoftwareSerial.h>
 //=======================SoftwareSerial================
 SoftwareSerial MCU (2, 3); // rx , tx
 //-----------------------NTP-----------------------------
-WiFiUDP ntpUDP;
-NTPClient timeClient(ntpUDP, "pool.ntp.org");
-unsigned long epochTime;
+//WiFiUDP ntpUDP;
+//NTPClient timeClient(ntpUDP, "pool.ntp.org");
+//unsigned long epochTime;
 //====================POMPA=========================
 #define pumpA 4
 #define pumpB 5
@@ -41,12 +41,16 @@ void setup()
   pinMode(pumpB, OUTPUT);
   pinMode(pumpW, OUTPUT);
   pinMode(pumpWO, OUTPUT);
+  digitalWrite(pumpA,1);
+  digitalWrite(pumpB,1);
+  digitalWrite(pumpW,1);
+  digitalWrite(pumpWO,1);
   Serial.println("Inisialisasi....!!!");
   gravityTds.setPin(sensPin);
   gravityTds.setAref(5.0);  //reference voltage on ADC, default 5.0V on Arduino UNO
   gravityTds.setAdcRange(1024);  //1024 for 10bit ADC;4096 for 12bit ADC
   gravityTds.begin();
-  timeClient.begin();
+//  timeClient.begin();
 }
 
 void loop()

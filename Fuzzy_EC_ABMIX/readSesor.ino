@@ -9,7 +9,4 @@ float readTDS()
   Serial.println("ppm");
   return tdsValue;
 }
-float getTimestamp()
-{
-  float epochTime = getTime();
-}
+//float getTimestamp 
