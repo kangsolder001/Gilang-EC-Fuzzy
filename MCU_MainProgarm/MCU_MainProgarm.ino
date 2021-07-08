@@ -6,12 +6,12 @@
 #include <EEPROM.h>
 
 #include<SoftwareSerial.h>
-SoftwareSerial ard(D3, D4);
+SoftwareSerial ard(D2, D1);
 
 //=================WIFI================================
 char auth[] = "c3xcE-dT6CFSx-nK0deEfQKDEfDFi6ht";
-char ssid[] = "NOMOREDOTAFORTOMMOROW";   //sesuaikan ssid
-char pass[] = "N0m0r3d0t4"; // sesuaikan passwrod
+char ssid[] = "PUTRA-_1";   //sesuaikan ssid
+char pass[] = "gak tahu"; // sesuaikan passwrod
 
 //======================NTP===============================
 static const char ntpServerName[] = "id.pool.ntp.org";
@@ -36,7 +36,7 @@ BLYNK_WRITE(V0) // data tanggal input
   savetoEeprom(mB, 5, 2);
   savetoEeprom(dB, 7, 2);
 }
-unsigned long prevR;
+unsigned long prevR, timeNow;
 float EC;
 unsigned int selisih;
 

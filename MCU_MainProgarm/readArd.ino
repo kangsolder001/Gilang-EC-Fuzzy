@@ -3,7 +3,7 @@ void readArd()
   if ( ard.available() > 0)
   {
     String in = Serial.readStringUntil('\r');
-
+    Serial.println( in);
     EC = parsing(in);
   }
 }
@@ -11,7 +11,7 @@ void sendToArd(int nDay)
 {
   String dataSend = "|";
   dataSend += String(nDay);
-  dataSend += "|/r";
+  dataSend += "|\r";
   ard.print(dataSend);
   Serial.println(dataSend);
 }

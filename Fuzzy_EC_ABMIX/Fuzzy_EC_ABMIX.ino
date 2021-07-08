@@ -2,7 +2,7 @@
 #include "GravityTDS.h"
 #include<SoftwareSerial.h>
 //=======================SoftwareSerial================
-SoftwareSerial MCU (2, 3); // rx , tx
+SoftwareSerial MCU (3, 2); // rx , tx
 //====================POMPA=========================
 #define pumpA 4
 #define pumpB 5
@@ -28,6 +28,7 @@ int Day, days;
 #define sensPin A1
 GravityTDS gravityTds;
 //----------------------------------------------------------
+float tds;
 float Error, deError;
 boolean bWater, bWaterOut, bABMIX, bFuzzy;
 unsigned long waktuONWater, waktuONABMIX, waterBegin, ABMIXBegin, prevR, endFuzzy;
@@ -56,7 +57,7 @@ void loop()
 {
   if (millis() - prevR > 500)
   {
-    float tds = readTDS();
+    tds = readTDS();
     Serial.print("TDS = ");
     Serial.println(tds);
     prevR = millis();
@@ -64,16 +65,22 @@ void loop()
   }
   readMCU();
 
-  float tds = readTDS();
+  //float tds = readTDS();
   float Er[3];
   float dEr[3];
   float rules[3][3];
   float Error_1 = Error;
   int sP;
+  if ( (millis() - endFuzzy >= delayFuzzy) && !bFuzzy)
+  {
+    Serial.println("Fuzzy ON ");
+    bFuzzy = true;
+  }
   if ( Day != days)
   {
     days = Day;
-
+    Serial.print("Day = ");
+    Serial.println(Day);
     if ( Day >= 10 && Day <= 15)
     {
       SP1 = sP1a;
@@ -99,11 +106,7 @@ void loop()
       bFuzzy = false;
     }
   }
-  if ( (millis() - endFuzzy >= delayFuzzy) && !bFuzzy)
-  {
-    Serial.println("Fuzzy ON ");
-    bFuzzy = true;
-  }
+  
   if ( bFuzzy )
   {
     if ( tds <= SP1 )

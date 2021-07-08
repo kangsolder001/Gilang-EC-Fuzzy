@@ -32,7 +32,7 @@ void kondisi(float def)
   {
     porsi = def - 100;
     //    waktu = porsi * 106.8; // 5ml = 3000 ms, 10ml = 56ppm , 100 ppm = 17.8ml , 17.8 ml =10680 ms
-    waktuONABMIX =  porsi * 106.8;
+    waktuONABMIX =  porsi * 55.0;
     Serial.print("mulai = ");
     Serial.println(millis());
     Serial.println("Pemberian ABMIX");

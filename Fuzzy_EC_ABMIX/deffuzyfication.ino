@@ -17,8 +17,8 @@ float outRule(float rulein, int numRule)
   {
     valOut = 100 + (100 * rulein);
   }
-  Serial.print("valout = ");
-  Serial.println(valOut);
+  //Serial.print("valout = ");
+  //Serial.println(valOut);
   return valOut;
 
 }

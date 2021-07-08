@@ -13,6 +13,7 @@ void readMCU()
   {
     String in = Serial.readStringUntil('\r');
     Day = parsing( in);
+    Serial.println( in);
   }
 }
 
