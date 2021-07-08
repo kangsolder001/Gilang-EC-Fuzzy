@@ -10,8 +10,8 @@ SoftwareSerial ard(D3, D4);
 
 //=================WIFI================================
 char auth[] = "c3xcE-dT6CFSx-nK0deEfQKDEfDFi6ht";
-char ssid[] = "NOMOREDOTAFORTOMMOROW";   //sesuaikan ssid 
-char pass[] = "N0m0r3d0t4"; // sesuaikan passwrod 
+char ssid[] = "NOMOREDOTAFORTOMMOROW";   //sesuaikan ssid
+char pass[] = "N0m0r3d0t4"; // sesuaikan passwrod
 
 //======================NTP===============================
 static const char ntpServerName[] = "id.pool.ntp.org";
@@ -32,14 +32,28 @@ BLYNK_WRITE(V0) // data tanggal input
   Serial.print("Data Blynk:");
   Serial.println(dateBlynk);
   parsingDate(yB, mB, dB, dateBlynk);
+  savetoEeprom(yB, 1, 4);
+  savetoEeprom(mB, 5, 2);
+  savetoEeprom(dB, 7, 2);
 }
 unsigned long prevR;
 float EC;
-
+unsigned int selisih;
 
 void setup() {
   ard.begin(9600);
+
+  EEPROM.begin(512);
   Serial.begin(115200);
+  yB = readEEPROM(1, 4);
+  mB = readEEPROM(5, 2);
+  dB = readEEPROM(7, 2);
+  Serial.print("yB = ");
+  Serial.println(yB);
+  Serial.print("mB = ");
+  Serial.println(mB);
+  Serial.print("dB = ");
+  Serial.println(dB);
   Blynk.begin(auth, ssid, pass);
   ntpBegin();
 }
@@ -50,38 +64,31 @@ void loop() {
     ntpBegin();
   }
   readArd();
-
-
-
-  if ( Serial.available() > 0)
+  if ( selisih != timeNow)
   {
-    String in = Serial.readStringUntil('\r');
-    //    lcd.clear();
-    EC = parsing(in);
-    Blynk.virtualWrite(V1, EC);
+    timeNow = selisih;
+    sendToArd(timeNow);
   }
-
-  if ( millis() - prevR > 500)
+  //  if ( Serial.available() > 0)
+  //  {
+  //    String in = Serial.readStringUntil('\r');
+  //    EC = parsing(in);
+  //    Blynk.virtualWrite(V1, EC);
+  //  }
+  if ( millis() - prevR > 1000)
   {
-    prevR = millis();
-    int x = random(1, 100);
-    Blynk.virtualWrite(V2, x);
+    Blynk.virtualWrite(V2, EC);
+    Blynk.virtualWrite(V1, EC);
 
     String jam = getTime();
-    Serial.print("jam = ");
-    Serial.println(jam);
     String ttl = getDate();
-    Serial.print("ttl = ");
-    Serial.println(ttl);
     parsingDate(yN, mN, dN, ttl);
-    unsigned int selisih;
     int ytdB, ytdN, mtdB, mtdN;
     long  totalDayB = (yB * 365) + (mB * mon[mB - 1]) + dB;
     long totalDayN = (yN  * 365) + (mN * mon[mN - 1]) + dN;
-    selisih = totalDayN - totalDayB; // umur tanaman 
+    selisih = totalDayN - totalDayB; // umur tanaman
     Serial.print("selisih hari = ");
     Serial.println(selisih);
-
     Blynk.virtualWrite(V3, selisih);
   }
   Blynk.run();

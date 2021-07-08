@@ -7,7 +7,14 @@ void readArd()
     EC = parsing(in);
   }
 }
-
+void sendToArd(int nDay)
+{
+  String dataSend = "|";
+  dataSend += String(nDay);
+  dataSend += "|/r";
+  ard.print(dataSend);
+  Serial.println(dataSend);
+}
 float parsing( String in)
 {
   float ec;
@@ -27,14 +34,14 @@ void parsingDate(int &yy, int &mm, int &dd, String dateBlynk)
   ind2 = dateBlynk.indexOf('/', ind1 + 1);
   String YY = dateBlynk.substring(0, ind1);
   String MM = dateBlynk.substring(ind1 + 1, ind2);
-  String DD = dateBlynk.substring(ind2+1, dateBlynk.length());
+  String DD = dateBlynk.substring(ind2 + 1, dateBlynk.length());
   yy = YY.toInt();
   mm = MM.toInt();
   dd = DD.toInt();
-  Serial.print("year = ");
-  Serial.println(yy);
-  Serial.print("month = ");
-  Serial.println(mm);
-  Serial.print("date = ");
-  Serial.println(dd);
+  //  Serial.print("year = ");
+  //  Serial.println(yy);
+  //  Serial.print("month = ");
+  //  Serial.println(mm);
+  //  Serial.print("date = ");
+  //  Serial.println(dd);
 }

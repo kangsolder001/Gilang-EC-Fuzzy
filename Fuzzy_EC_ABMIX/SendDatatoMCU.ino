@@ -7,3 +7,23 @@ void SendData(float EC)
   MCU.print(dataSend);
   Serial.println(dataSend);
 }
+void readMCU()
+{
+  if (MCU.available() > 0)
+  {
+    String in = Serial.readStringUntil('\r');
+    Day = parsing( in);
+  }
+}
+
+int parsing( String in)
+{
+  int out;
+  int ind1, ind2;
+  ind1 = in.indexOf('|');
+  ind2 = in.indexOf('|', ind1 + 1);
+  String output = in.substring(ind1 + 1 , ind2);
+
+  out = output.toInt();
+  return out;
+}

@@ -1,24 +1,22 @@
 #include <EEPROM.h>
 #include "GravityTDS.h"
-//#include <NTPClient.h>
-//#include <WiFiUdp.h>
 #include<SoftwareSerial.h>
 //=======================SoftwareSerial================
 SoftwareSerial MCU (2, 3); // rx , tx
-//-----------------------NTP-----------------------------
-//WiFiUDP ntpUDP;
-//NTPClient timeClient(ntpUDP, "pool.ntp.org");
-//unsigned long epochTime;
 //====================POMPA=========================
 #define pumpA 4
 #define pumpB 5
 #define pumpW 6
 #define pumpWO 7
 //-------------------nilai set point tds --------------------
-#define sP1a 560
-#define sP1b 600
-#define sP2 750
-#define sP3 900
+#define sP1a 560  // 10 -15
+#define sP1b 600  // 10 -15
+#define sP2a 750  // 16-23
+#define sP2b 790  // 16-23
+#define sP3a 900  //24-30
+#define sP3b 940  //24-30
+int SP1, SP2;
+int Day, days;
 //--------------------batas batas Error dan deError----------
 #define Er1 -130
 #define Er2  0
@@ -31,8 +29,9 @@ SoftwareSerial MCU (2, 3); // rx , tx
 GravityTDS gravityTds;
 //----------------------------------------------------------
 float Error, deError;
-boolean bWater, bWaterOut, bABMIX;
-unsigned long waktuONWater, waktuONABMIX, waterBegin, ABMIXBegin, prevR;
+boolean bWater, bWaterOut, bABMIX, bFuzzy;
+unsigned long waktuONWater, waktuONABMIX, waterBegin, ABMIXBegin, prevR, endFuzzy;
+unsigned long delayFuzzy = 180000;
 void setup()
 {
   Serial.begin(115200);
@@ -41,16 +40,16 @@ void setup()
   pinMode(pumpB, OUTPUT);
   pinMode(pumpW, OUTPUT);
   pinMode(pumpWO, OUTPUT);
-  digitalWrite(pumpA,1);
-  digitalWrite(pumpB,1);
-  digitalWrite(pumpW,1);
-  digitalWrite(pumpWO,1);
+  digitalWrite(pumpA, 1);
+  digitalWrite(pumpB, 1);
+  digitalWrite(pumpW, 1);
+  digitalWrite(pumpWO, 1);
   Serial.println("Inisialisasi....!!!");
   gravityTds.setPin(sensPin);
   gravityTds.setAref(5.0);  //reference voltage on ADC, default 5.0V on Arduino UNO
   gravityTds.setAdcRange(1024);  //1024 for 10bit ADC;4096 for 12bit ADC
   gravityTds.begin();
-//  timeClient.begin();
+  //  timeClient.begin();
 }
 
 void loop()
@@ -63,25 +62,59 @@ void loop()
     prevR = millis();
     SendData(tds);
   }
-  if ( Serial.available() > 0)
+  readMCU();
+
+  float tds = readTDS();
+  float Er[3];
+  float dEr[3];
+  float rules[3][3];
+  float Error_1 = Error;
+  int sP;
+  if ( Day != days)
   {
-    String in = Serial.readStringUntil('\r');
-    float tds = in.toFloat();
-    //    float tds = readTDS();
-    float Er[3];
-    float dEr[3];
-    float rules[3][3];
-    float Error_1 = Error;
-    int sP;
-    if ( tds <= sP1a )
+    days = Day;
+
+    if ( Day >= 10 && Day <= 15)
     {
-      sP = sP1a;
+      SP1 = sP1a;
+      SP2 = sP1b;
+      bFuzzy = true;
+    }
+    else if ( Day >= 16 && Day <= 23)
+    {
+      SP1 = sP2a;
+      SP2 = sP2b;
+      bFuzzy = true;
+    }
+    else if ( Day >= 24 && Day <= 30)
+    {
+      SP1 = sP3a;
+      SP2 = sP3b;
+      bFuzzy = true;
+    }
+    else
+    {
+      SP1 = 0;
+      SP2 = 0;
+      bFuzzy = false;
+    }
+  }
+  if ( (millis() - endFuzzy >= delayFuzzy) && !bFuzzy)
+  {
+    Serial.println("Fuzzy ON ");
+    bFuzzy = true;
+  }
+  if ( bFuzzy )
+  {
+    if ( tds <= SP1 )
+    {
+      sP = SP1;
       Error = sP - tds; // Error = setpoint - nilai sensor (nilai sekarang )
       deError = Error - Error_1; // deError = nilai error sekarang - nilai error sebelumnya
     }
-    else if ( tds >= sP1b)
+    else if ( tds >= SP2)
     {
-      sP = sP1b;
+      sP = SP2;
       Error = sP - tds;
       deError = Error - Error_1;
     }
@@ -101,7 +134,6 @@ void loop()
     Rules(Er, dEr, rules);
     float defuz = Deffuzyfication(rules);
     kondisi(defuz);
-
     Serial.println("=======================================================================================");
   }
   offPump();
