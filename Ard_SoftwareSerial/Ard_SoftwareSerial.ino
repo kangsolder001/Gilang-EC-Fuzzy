@@ -1,7 +1,7 @@
 #include <SoftwareSerial.h>
 
 //=======================SoftwareSerial================
-SoftwareSerial ard (3, 2); // rx , tx
+SoftwareSerial ard (4, 3); // rx , tx
 
 void setup() {
 
@@ -17,12 +17,12 @@ void loop() {
     String in = Serial.readStringUntil('\r');
     Serial.print("input = ");
     Serial.println(in);
-    in = in + "\r";
+//    in = in + "\r";
     ard.print(in ) ;
   }
-  if ( MCU.available() > 0)
+  if ( ard.available() > 0)
   {
-    String in = Serial.readStringUntil('\r');
+    String in = ard.readStringUntil('\r');
     Serial.print("input dari MCU = ");
     Serial.println(in);
   }

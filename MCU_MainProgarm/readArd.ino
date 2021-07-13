@@ -2,7 +2,7 @@ void readArd()
 {
   if ( ard.available() > 0)
   {
-    String in = Serial.readStringUntil('\r');
+    String in = ard.readStringUntil('\r');
     Serial.println( in);
     EC = parsing(in);
   }

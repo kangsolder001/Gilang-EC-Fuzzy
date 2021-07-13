@@ -11,7 +11,7 @@ void readMCU()
 {
   if (MCU.available() > 0)
   {
-    String in = Serial.readStringUntil('\r');
+    String in = MCU.readStringUntil('\r');
     Day = parsing( in);
     Serial.println( in);
   }
