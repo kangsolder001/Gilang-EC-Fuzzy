@@ -1,7 +1,7 @@
 #include <SoftwareSerial.h>
 // NODE MCU 
 //=======================SoftwareSerial================
-SoftwareSerial MCU (D3, D4); // rx , tx
+SoftwareSerial MCU (D1, D2); // rx , tx
 
 void setup() {
 

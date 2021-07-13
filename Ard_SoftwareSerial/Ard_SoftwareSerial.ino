@@ -1,7 +1,7 @@
 #include <SoftwareSerial.h>
 
 //=======================SoftwareSerial================
-SoftwareSerial ard (4, 3); // rx , tx
+SoftwareSerial ard (2, 3); // rx , tx
 
 void setup() {
 
