@@ -30,10 +30,10 @@ GravityTDS gravityTds;
 //----------------------------------------------------------
 float tds;
 float Error, deError;
-boolean bWater, bWaterOut, bABMIX, bFuzzy;
+boolean bWater, bWaterOut, bABMIX, bFuzzy, bTimeFuzzy = true, bdoneFuzzy = true;
 unsigned long waktuONWater, waktuONABMIX, waterBegin, ABMIXBegin, prevR, endFuzzy;
-//unsigned long delayFuzzy = 180000;
-unsigned long delayFuzzy = 3000;
+unsigned long delayFuzzy = 180000;
+
 void setup()
 {
   Serial.begin(115200);
@@ -72,10 +72,11 @@ void loop()
   float rules[3][3];
   float Error_1 = Error;
   int sP;
-  if ( (millis() - endFuzzy >= delayFuzzy) && !bFuzzy)
+  if ( (millis() - endFuzzy >= delayFuzzy) && !bTimeFuzzy)
   {
     Serial.println("Fuzzy ON ");
     bTimeFuzzy = true;
+    bdoneFuzzy = true;
   }
   if ( Day != days)
   {
@@ -108,7 +109,7 @@ void loop()
     }
   }
   
-  if ( bFuzzy  && bTimeFuzzy)
+  if ( bFuzzy  && bTimeFuzzy && bdoneFuzzy )
   {
     if ( tds <= SP1 )
     {
@@ -139,7 +140,7 @@ void loop()
     float defuz = Deffuzyfication(rules);
     kondisi(defuz);
     Serial.println("=======================================================================================");
-    bTimeFuzzy = false;
+    bdoneFuzzy = false;
   }
   offPump();
 }

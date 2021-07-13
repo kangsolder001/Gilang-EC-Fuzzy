@@ -88,6 +88,7 @@ void offPump()
     bWaterOut = false;
     pumpWater();
     endFuzzy = millis();
+    bTimeFuzzy = false;
   }
   else if (millis() - waterBegin >= waktuONWater && bWater )
   {
@@ -98,6 +99,7 @@ void offPump()
     Serial.println(millis());
     bWater = false;
     endFuzzy = millis();
+    bTimeFuzzy = false;
   }
   if ( millis() - ABMIXBegin >= waktuONABMIX && bABMIX)
   {
@@ -109,5 +111,6 @@ void offPump()
     Serial.println(millis());
     bABMIX = false;
     endFuzzy = millis();
+    bTimeFuzzy = false;
   }
 }
