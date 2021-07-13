@@ -32,7 +32,8 @@ float tds;
 float Error, deError;
 boolean bWater, bWaterOut, bABMIX, bFuzzy;
 unsigned long waktuONWater, waktuONABMIX, waterBegin, ABMIXBegin, prevR, endFuzzy;
-unsigned long delayFuzzy = 180000;
+//unsigned long delayFuzzy = 180000;
+unsigned long delayFuzzy = 3000;
 void setup()
 {
   Serial.begin(115200);
@@ -74,7 +75,7 @@ void loop()
   if ( (millis() - endFuzzy >= delayFuzzy) && !bFuzzy)
   {
     Serial.println("Fuzzy ON ");
-    bFuzzy = true;
+    bTimeFuzzy = true;
   }
   if ( Day != days)
   {
@@ -107,7 +108,7 @@ void loop()
     }
   }
   
-  if ( bFuzzy )
+  if ( bFuzzy  && bTimeFuzzy)
   {
     if ( tds <= SP1 )
     {
@@ -138,6 +139,7 @@ void loop()
     float defuz = Deffuzyfication(rules);
     kondisi(defuz);
     Serial.println("=======================================================================================");
+    bTimeFuzzy = false;
   }
   offPump();
 }
