@@ -35,3 +35,5 @@ kesimpulan
 4. data output untuk grafik 
 5. layout dan data Blink 
 6. dll 
+
+XXXXX
